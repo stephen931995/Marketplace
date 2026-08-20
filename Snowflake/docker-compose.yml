@@ -1,0 +1,30 @@
+services:
+
+  snowflake-api:
+    build:
+      context: ./server
+    container_name: snowflake-api
+    restart: unless-stopped
+    environment:
+      PORT: 3001
+    networks:
+      - internal
+      - shared_proxy
+
+  snowflake-app:
+    build:
+      context: .
+    container_name: snowflake-app
+    restart: unless-stopped
+    expose:
+      - "80"
+    depends_on:
+      - snowflake-api
+    networks:
+      - shared_proxy
+      - internal
+
+networks:
+  internal:
+  shared_proxy:
+    external: true
